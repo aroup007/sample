@@ -1,0 +1,116 @@
+﻿CREATE TABLE [dbo].[Customer] (
+    [Id]      INT          IDENTITY (1, 1) NOT NULL,
+    [CName]   VARCHAR (50) NULL,
+    [Email]   VARCHAR (50) NULL,
+    [Address] VARCHAR (50) NULL,
+    [Phone]   VARCHAR (50) NULL,
+    [DOE]     DATE         NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC)
+);
+
+
+
+CREATE TABLE [dbo].[Category] (
+    [CategoryId]          INT          IDENTITY (1, 1) NOT NULL,
+    [CategoryName] VARCHAR (50) NULL,
+	[CategoryDescription] VARCHAR (50) NULL,
+    PRIMARY KEY CLUSTERED ([CategoryId] ASC)
+);
+
+
+
+CREATE TABLE [dbo].[Product] (
+    [Id]           INT           IDENTITY (1, 1) NOT NULL,
+    [ProductName]  VARCHAR (50)  NULL,
+    [Quantity]     INT           NULL,
+    [Price]        MONEY         NULL,
+    [ProductImage] VARCHAR (MAX) NULL,
+    [CategoryId]   INT           NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [FK_Product_ToTable] FOREIGN KEY ([CategoryId]) REFERENCES [dbo].[Category] ([CategoryId])
+);
+
+CREATE TABLE [dbo].[Orders] (
+    [Id]         INT   IDENTITY (1, 1) NOT NULL,
+    [OrderDate]  DATE  NULL,
+    [GrandTotal] MONEY NULL,
+    [CustomerId] INT NULL, 
+    PRIMARY KEY CLUSTERED ([Id] ASC), 
+    CONSTRAINT [FK_Orders_ToTable] FOREIGN KEY (CustomerId) REFERENCES Customer(Id)
+);
+
+
+
+CREATE TABLE [dbo].[OrderDetails] (
+    [Id]         INT          NOT NULL,
+    [PId]        INT NOT NULL,
+    [SalesQTY]   INT          NULL,
+    [SalesPrice] MONEY        NULL,
+    [SaleTotal]  AS           ([SalesQTY]*[SalesPrice]),
+    PRIMARY KEY CLUSTERED ([Id] ASC, [PId] ASC),
+    FOREIGN KEY ([Id]) REFERENCES [dbo].[Orders] ([Id]), 
+    CONSTRAINT [FK_OrderDetails_ToTable] FOREIGN KEY (PId) REFERENCES Product(Id)
+);
+
+
+
+											.
+											.
+											.
+											.
+											.
+											.
+											.
+											.
+											.
+											.
+											.
+
+--------------When Typing-------------
+CREATE TABLE [dbo].OrdersDetails
+(
+	[Id] INT NOT NULL Foreign KEY references orders(id),  Change This Line
+    [PId] VARCHAR(50) NOT NULL, 
+    [SalesQTY] INT NULL, 
+    [SalesPrice] MONEY NULL, 
+    [SaleTotal]as(SalesQTY*SalesPrice)			 Change This Line
+	primary key(Id,PId)							Change This Line
+)
+----------------------------------------.......-------------------------------------------
+
+
+
+
+
+
+CREATE TABLE [dbo].[tblRole]
+(
+	[rId] INT NOT NULL Identity PRIMARY KEY, 
+    [rName] VARCHAR(50) NULL
+);
+Go
+
+CREATE TABLE [dbo].[tblUser]
+(
+	[uId] INT NOT NULL Identity PRIMARY KEY, 
+	[uName] VARCHAR(50) Unique NULL, 
+    [uEmail] VARCHAR(50) NULL, 
+    [uPassword] VARCHAR(50) NULL, 
+    [rId] INT NULL, 
+    CONSTRAINT [FK_tblUser_ToTable] FOREIGN KEY ([rId]) REFERENCES [tblRole]([rId])
+);
+Go
+
+CREATE TABLE [dbo].[Register] (
+    [RegId]              INT          IDENTITY (1, 1) NOT NULL,
+    [RegUserName]            VARCHAR (50) NULL,
+    [RegEmail]           VARCHAR (50) NULL,
+    [RegPassword]        VARCHAR (50) NULL,
+    [RegConfirmPassword] VARCHAR (50) NULL,
+    [uId] INT NULL, 
+    PRIMARY KEY CLUSTERED ([RegId] ASC), 
+    CONSTRAINT [FK_Register_ToTable] FOREIGN KEY (uId) REFERENCES tblUser(uId)
+);
+Go
+
+
